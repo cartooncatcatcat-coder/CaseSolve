@@ -1,0 +1,20 @@
+services:
+  - type: worker
+    name: casesolve-bot
+    runtime: node
+    plan: free
+    buildCommand: pnpm install && pnpm --filter @workspace/telegram-bot run build
+    startCommand: node artifacts/telegram-bot/dist/index.js
+    envVars:
+      - key: TOKEN_BOT
+        sync: false          # You enter this manually in Render dashboard
+      - key: NODE_ENV
+        value: production
+      - key: RENDER_URL
+        sync: false          # Set to your Render service URL, e.g. https://casesolve-bot.onrender.com
+      - key: DB_PATH
+        value: /var/data/casesolve.db
+    disk:
+      name: casesolve-data
+      mountPath: /var/data
+      sizeGB: 1
